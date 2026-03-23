@@ -1,0 +1,140 @@
+{
+  "name": "remote-php-interpreter",
+  "displayName": "Remote PHP Interpreter",
+  "description": "Execute PHP scripts on remote servers via SSH",
+  "version": "0.1.0",
+  "publisher": "endoumame",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "remotePhp.configureServer",
+        "title": "Remote PHP: Configure Server"
+      },
+      {
+        "command": "remotePhp.selectServer",
+        "title": "Remote PHP: Select Server"
+      },
+      {
+        "command": "remotePhp.runFile",
+        "title": "Remote PHP: Run Current File",
+        "icon": "$(play)"
+      },
+      {
+        "command": "remotePhp.runSelection",
+        "title": "Remote PHP: Run Selection"
+      },
+      {
+        "command": "remotePhp.testConnection",
+        "title": "Remote PHP: Test Connection"
+      }
+    ],
+    "configuration": {
+      "title": "Remote PHP Interpreter",
+      "properties": {
+        "remotePhp.servers": {
+          "type": "array",
+          "default": [],
+          "description": "List of remote PHP server configurations",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Display name for this server"
+              },
+              "host": {
+                "type": "string",
+                "description": "SSH hostname or IP"
+              },
+              "port": {
+                "type": "number",
+                "default": 22,
+                "description": "SSH port"
+              },
+              "username": {
+                "type": "string",
+                "description": "SSH username"
+              },
+              "privateKeyPath": {
+                "type": "string",
+                "description": "Path to SSH private key file"
+              },
+              "password": {
+                "type": "string",
+                "description": "SSH password (not recommended; use key auth)"
+              },
+              "phpPath": {
+                "type": "string",
+                "default": "php",
+                "description": "Path to PHP binary on remote"
+              },
+              "remoteTmpDir": {
+                "type": "string",
+                "default": "/tmp",
+                "description": "Temp directory on remote for uploads"
+              }
+            },
+            "required": [
+              "name",
+              "host",
+              "username"
+            ]
+          }
+        },
+        "remotePhp.defaultServer": {
+          "type": "string",
+          "default": "",
+          "description": "Name of the default remote server"
+        }
+      }
+    },
+    "menus": {
+      "editor/context": [
+        {
+          "command": "remotePhp.runFile",
+          "when": "resourceLangId == php",
+          "group": "1_run"
+        },
+        {
+          "command": "remotePhp.runSelection",
+          "when": "resourceLangId == php && editorHasSelection",
+          "group": "1_run"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "remotePhp.runFile",
+        "key": "ctrl+shift+r",
+        "mac": "cmd+shift+r",
+        "when": "resourceLangId == php"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "node esbuild.mjs --production",
+    "compile": "node esbuild.mjs",
+    "watch": "node esbuild.mjs --watch",
+    "check-types": "tsc --noEmit",
+    "package": "npx @vscode/vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "@types/ssh2": "^1.15.0",
+    "esbuild": "^0.24.0",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "ssh2": "^1.16.0"
+  }
+}

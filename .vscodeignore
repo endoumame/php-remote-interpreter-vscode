@@ -1,0 +1,10 @@
+src/
+node_modules/
+!node_modules/ssh2/
+!node_modules/cpu-features/
+.vscode/
+*.ts
+!dist/**/*.js
+tsconfig.json
+esbuild.mjs
+.gitignore
